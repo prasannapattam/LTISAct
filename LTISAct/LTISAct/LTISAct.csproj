@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Act.Framework, Version=16.1.207.0, Culture=neutral, PublicKeyToken=ebf6b2ff4d0a08aa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ACT\Act for Web\APFW\bin\Act.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Act.Web.Framework">
       <HintPath>..\..\..\..\..\Program Files (x86)\ACT\Act for Web\APFW\bin\Act.Web.Framework.dll</HintPath>
     </Reference>

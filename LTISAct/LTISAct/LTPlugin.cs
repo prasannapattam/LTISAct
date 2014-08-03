@@ -1,4 +1,5 @@
-﻿using Act.Web.Framework;
+﻿
+using Act.Web.Framework;
 using Act.Web.Framework.Core.Layouts;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,18 @@ namespace LTISAct
     {
         public void Init(ACTSessionManager session)
         {
-            int newContacts = GetNewContactsCount();
-            if (newContacts > 0)
-            {
-                string caption = @"<span style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;"" onclick=""location.href = '/APFW/plugins/LTContacts.aspx'"">YOU HAVE " + newContacts.ToString() + " UNFINISHED TASKS</span>";
-                session.Menu.Items.Add("LTContacts", caption, ActionType.None, "", true);
-            }
+            string currentUserID = session.Framework.CurrentUser.ID.ToString();
+            string content = @"<input type=""hidden"" id=""LTCurrentUserID"" value=""" + currentUserID + @"""><span id=""spnCount"" style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;""></span>";
+            session.Menu.Items.Add("LTContacts", content, ActionType.None, "", true);
+
+            //session.Framework.CurrentUser.MyRecord
+
+            //int newContacts = GetNewContactsCount();
+            //if (newContacts > 0)
+            //{
+            //    string caption = @"<span style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;"" onclick=""location.href = '/APFW/plugins/LTContacts.aspx'"">YOU HAVE " + newContacts.ToString() + " UNFINISHED TASKS</span>";
+            //    session.Menu.Items.Add("LTContacts", caption, ActionType.None, "", true);
+            //}
 
             session.NavBar.AddCustomNavBarItemProvider(new CustomNavBarItemProvider(this.ServeCustomTodayNavBarItem));
         }
