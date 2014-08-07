@@ -19,7 +19,8 @@
 <asp:Content ID="afterFormScriptContent" ContentPlaceHolderID="afterFormScriptContent" runat="server">
     <script language="javascript">
         $(function () {
-            $("#LTContacts").load("/LTIS/Home/Act", function () {
+            var suffix = '?cachebuster=' + new Date().getTime();
+            $("#LTContacts").load("/LTIS/Home/Act" + suffix, function () {
                 $("#LTContacts").width($("#LTContacts").parent().width() - 5);
                 $("#LTContacts").height($("#LTContacts").parent().height() - 5);
                 //$("#divLoading").hide();

@@ -1,0 +1,145 @@
+<%@ Master Language="C#" AutoEventWireup="false" CodeBehind="MasterPage.master.cs"
+    Inherits="Act.Web.MasterPages.MasterPage" EnableTheming="true" EnableViewState="true" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title></title>
+    <!-- this is now done on the onInit code at the server.  it writes this out -->
+    <!--<script language="javascript" type="text/javascript">var AppPath = '#APP_PATH#';</script>-->
+
+    <script type="text/javascript" src="../JavaScript/Act.Application.js"></script>
+    <script type="text/javascript">        var ACTIVITY_PATH = "#ACTIVITY_PATH#";</script>
+    <script type="text/javascript" src="../javascript/menu.js"></script>
+    <script type="text/javascript" src="../JavaScript/StartupHelper.js"></script>
+    <script type="text/javascript" src="../JavaScript/WorkflowServerActions.js"></script>
+    <script type="text/javascript" src="../JavaScript/Workflow.js"></script>
+    <script type="text/javascript" src="../JavaScript/StatusBar.js"></script>
+    <script type="text/javascript" src="../JavaScript/drag.js"></script>
+    <script type="text/javascript" src="../JavaScript/flexLayout.js"></script>
+    <script type="text/javascript" src="../JavaScript/PopupBase.js"></script>
+    <script type="text/javascript" src="../JavaScript/StringObj.js"></script>
+    <script type="text/javascript" src="../JavaScript/TimeoutTimer.js"></script>
+
+    <script type="text/javascript">
+        var ALARM_PATH = '#ACTIVITY_PATH#'; // required by StartupHelper.js
+        var TZREM_PATH = '#CAL_PATH#';    // required by StartupHelper.js
+        function navigateToContact(who)
+        {
+            SaveContactLookup(who);
+            //alert('This will display the info for ' + who + ' in the Contact detail view.');
+            parent.document.location.href = '#APP_PATH#contacts/contactDetail.aspx?id=' + who;
+        }
+        function navigateToContactList()
+        {
+            //alert('This will display the info for ' + who + ' in the Contact detail view.');
+            parent.document.location.href = '#APP_PATH#contacts/contactlistview.aspx';
+        }
+        function StartTimer()
+        {
+            try
+            {
+                StartAppStartupTimers();    // see StartupHelper.js
+            }
+            catch(e)
+            {
+                alert(e + "line 96 master");
+            }
+        }
+
+        // calls the method to allow the view to do any loading call. TODO: change to jQuery or MS AJAX
+        function Load()
+        {
+            try
+            {
+                PageOnLoad();
+            }
+            catch(e) { }
+        }
+        jQuery(function()
+        {
+            addEvent(window, "resize", fixupMenuSize, true);
+            addEvent(window, "resize", resizeTemplate, true);
+            addEvent(window, "focus", setTheActiveWindow, true);
+
+            StartTimer();
+        });
+    </script>
+
+    <asp:ContentPlaceHolder ID="headerContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body onload="Load();resizeTemplate();fixupMenuSize();" onbeforeunload="try{handleBeforeUnload()}catch(e){};"
+    style="overflow: hidden" flexlayout="true" ad_minx="895" ad_miny="592">
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+    <%--menus don't participate in the flow layout stuff because their popup menus are inner divs that would be hidden, but
+    we use an empty div to reserve space for the menu div.  We're also using the ad_marker class to that it's 
+    visibility is in sync with the rest of it.
+    Furthermore because of an issue with zOrder and iframes and divs with menus, we have to manually patch up mainMenuDiv's
+    location.
+ 
+    --%>
+    <div id="mainMenuDiv" style="z-index: 2;" class="headerMenuBg ad_marker">
+        <act:HeaderMenus ID="HeaderMenu1" runat="server"></act:HeaderMenus>
+    </div>
+    <div id="menuProxy" ad_dock="top" style="height: 88px" class="ad_marker">
+    </div>
+
+    <div ad_dock="center" style="overflow: hidden; vertical-align: top" id="theContent"
+        class="ad_marker">
+        <!-- MAIN Content -->
+        <asp:ContentPlaceHolder ID="toolbarPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
+        <asp:ContentPlaceHolder ID="viewPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div ad_dock="bottom" style="height: 24px" class="ad_marker">
+        <act:AFWStatusBar ID="StatusBar1" runat="server"></act:AFWStatusBar>
+    </div>
+    <div ad_dock="left" class="ad_marker navbar" id="theLeftNavBar">
+        <act:NavBar ID="NavBar1" runat="server"></act:NavBar>
+    </div>
+    <div ad_dock="right" class="ad_marker navbar" id="theRightBar">
+        <div id="LTTodo" style="overflow: auto">
+            <div id="divLTTaskLoading" style="margin: 0px; padding: 0px; right: 0px;
+                top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+                opacity: .8; filter: alpha(opacity=70);display:block">
+                <p style="position: absolute; top: 30%; left: 45%; color: White;">
+                    please wait<br /><img src="/LTIS/Content/BlueOpal/loading-image.gif">
+                </p>
+            </div>
+        </div>
+        <script type="text/javascript" src="../JavaScript/Act.Application.js"></script>
+        <script>
+            function loadLTTasks() {
+                var ltCurentUserID = $("#LTCurrentUserID").val();
+                var suffix = '?cachebuster=' + new Date().getTime();
+                $("#LTTodo").load('/LTIS/Home/Activities/' + ltCurentUserID + suffix, function () {
+                    $("#LTTodo").width($("#LTTodo").parent().width());
+                    //$("#LTTodo").height($("#LTTodo").parent().height());
+                    $("#LTTodo").css("height", $("#LTTodo").parent().css("height"));
+                });
+            }
+            $(function () {
+                loadLTTasks();
+            });
+
+
+        </script>
+    </div>
+    <div id="apuDiv" style="z-index: 999999; visibility: hidden; position: absolute">
+    </div>
+    </form>
+    <asp:ContentPlaceHolder ID="afterFormScriptContent" runat="server">
+    </asp:ContentPlaceHolder>
+    <iframe id='IFrameSubMenu' src='#APP_PATH#blank.htm' style='position: absolute; left: 0px;
+        top: 0px; z-index: 990; display: none' scrolling='no' frameborder='0'></iframe>
+    <iframe id='IFrameSubMenu2' src='#APP_PATH#blank.htm' style='position: absolute;
+        left: 0px; top: 0px; z-index: 990; display: none' scrolling='no' frameborder='0'>
+    </iframe>
+    <iframe id='IFrameStream' src='#APP_PATH#blank.htm' style='position: absolute; left: 0px;
+        top: 0px; z-index: 990; display: none' scrolling='no' frameborder='0'></iframe>
+
+    <script type="text/javascript" src="../JavaScript/AttachFile.js"></script>
+</body>
+</html>
