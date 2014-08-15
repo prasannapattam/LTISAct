@@ -99,7 +99,7 @@
     <div ad_dock="left" class="ad_marker navbar" id="theLeftNavBar">
         <act:NavBar ID="NavBar1" runat="server"></act:NavBar>
     </div>
-    <div ad_dock="right" class="ad_marker navbar" id="theRightBar">
+    <div ad_dock="right" class="ad_marker navbar" id="theRightBar" style="display:none">
         <div id="LTTodo" style="overflow: auto">
             <div id="divLTTaskLoading" style="margin: 0px; padding: 0px; right: 0px;
                 top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
@@ -120,8 +120,24 @@
                     $("#LTTodo").css("height", $("#LTTodo").parent().css("height"));
                 });
             }
+            function getLTCount() {
+                var suffix = '?cachebuster=' + new Date().getTime();
+                var url = '/LTIS/api/ContactCount' + suffix;
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function (data) {
+                        var counttext = '(' + data + ')';
+                        $("#navButtonLTC #LTContactCount").text(counttext);
+                    },
+                    error: function (e) {
+
+                    }
+                });
+            }
             $(function () {
-                loadLTTasks();
+                //loadLTTasks();
+                getLTCount();
             });
 
 
