@@ -14,18 +14,9 @@ namespace LTISAct
     {
         public void Init(ACTSessionManager session)
         {
-            string currentUserID = session.Framework.CurrentUser.ID.ToString();
-            string content = @"<input type=""hidden"" id=""LTCurrentUserID"" value=""" + currentUserID + @"""><span id=""spnCount"" style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;""></span>";
+            //string currentUserID = session.Framework.CurrentUser.ID.ToString();
+            //string content = @"<input type=""hidden"" id=""LTCurrentUserID"" value=""" + currentUserID + @"""><span id=""spnCount"" style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;""></span>";
             //session.Menu.Items.Add("LTContacts", content, ActionType.None, "", true);
-
-            //session.Framework.CurrentUser.MyRecord
-
-            //int newContacts = GetNewContactsCount();
-            //if (newContacts > 0)
-            //{
-            //    string caption = @"<span style=""color: red; font-size: 12pt; font-weight: bold; text-decoration: underline;"" onclick=""location.href = '/APFW/plugins/LTContacts.aspx'"">YOU HAVE " + newContacts.ToString() + " UNFINISHED TASKS</span>";
-            //    session.Menu.Items.Add("LTContacts", caption, ActionType.None, "", true);
-            //}
 
             session.NavBar.AddCustomNavBarItemProvider(new CustomNavBarItemProvider(this.ServeCustomTodayNavBarItem));
 
@@ -50,20 +41,6 @@ namespace LTISAct
             caption = @"Web Inquries <span id=""LTContactCount"" style=""color: red; font-size: 10pt; font-weight: bold;""></span>";
             //return true to tell the provider to process this info and generate the custom navigation bar item
             return true;
-        }
-
-        private int GetNewContactsCount()
-        {
-            //getting the contact count from database
-            string connectionString = ConfigurationManager.ConnectionStrings["LTConnectionString"].ConnectionString;
-            string cmdText = "SELECT COUNT(*) FROM Contact";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(cmdText, conn);
-                return Convert.ToInt32(cmd.ExecuteScalar());
-            }
         }
     }
 }
